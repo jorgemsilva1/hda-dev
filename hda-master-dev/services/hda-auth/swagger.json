@@ -1,0 +1,46 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Yet Another Node.js Blogg Application API",
+      "description": "Yet Another Node.js Blogg Application API",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "schemes": [
+      "http"
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "paths": {
+      "/tables": {
+        "get": {
+          "tags": [
+            "Tables"
+          ],
+          "description": "Create new user in system",
+          "parameters": [],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "You reached the route."
+            },
+            "404": {
+                "description": "Not found"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {}
+  }

@@ -1,0 +1,61 @@
+version: '3'
+
+volumes:
+  database_data:
+    driver: local
+
+services:
+  hda-auth:
+    hostname: hda-auth
+    build: ./services/hda-auth
+    ports:
+      - "3001:3000"
+    env_file:
+      - ./services/hda-auth/env/node.env
+    container_name: hda-auth
+    depends_on:
+      - db-auth
+    restart: always
+
+  # https://stackoverflow.com/questions/55483781/how-to-create-postgres-database-and-run-migration-when-docker-compose-up
+  db-auth:
+    image: postgres:latest
+    env_file: ./services/hda-auth/env/node.env
+    container_name: 'db-auth'
+    hostname: db-auth
+    volumes:
+      - ./data/dbauth:/var/lib/postgresql/data/pgdata
+
+  nginx:
+    container_name: hda-gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      # make sure to set plaintext JWT_SECRET environment variable
+      JWT_SECRET: MYJWTSECRET
+    depends_on:
+      - hda-auth
+
+  # openresty:
+  #   container_name: hda-gateway
+  #   build:
+  #     context: ./gateway
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   restart: always
+  #   environment:
+  #     VALIDATION_URI: http://hda-auth:8080/auth/validate
+  #   env_file: ./gateway/env/.env
+  #   depends_on:
+  #     - hda-auth
+  #     - hda-food
+
+networks:
+  db:
+    driver: bridge
+    
